@@ -1,38 +1,24 @@
-import * as React from "react"
-import {
-  ChakraProvider,
-  Box,
-  Text,
-  Link,
-  VStack,
-  Code,
-  Grid,
-  theme,
-} from "@chakra-ui/react"
-import { ColorModeSwitcher } from "./ColorModeSwitcher"
-import { Logo } from "./Logo"
+import { ChakraProvider, Box, theme } from "@chakra-ui/react";
+import { ColorModeSwitcher } from "./ColorModeSwitcher";
+import { Layout } from "./components/Layout/Layout";
+import { Navigate, Route, Routes } from "react-router-dom";
+import { publickRoutes } from "./router";
 
-export const App = () => (
-  <ChakraProvider theme={theme}>
-    <Box textAlign="center" fontSize="xl">
-      <Grid minH="100vh" p={3}>
-        <ColorModeSwitcher justifySelf="flex-end" />
-        <VStack spacing={8}>
-          <Logo h="40vmin" pointerEvents="none" />
-          <Text>
-            Edit <Code fontSize="xl">src/App.tsx</Code> and save to reload.
-          </Text>
-          <Link
-            color="teal.500"
-            href="https://chakra-ui.com"
-            fontSize="2xl"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn Chakra
-          </Link>
-        </VStack>
-      </Grid>
-    </Box>
-  </ChakraProvider>
-)
+export const App = () => {
+  return (
+    <ChakraProvider resetCSS theme={theme}>
+      <Box textAlign="center" fontSize="xl">
+        <ColorModeSwitcher mb={20} justifySelf="flex-end" />
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            {publickRoutes.map((route, i) => (
+              <Route key={i} path={route.path} element={<route.element />} />
+            ))}
+          </Route>
+          <Route path="*" element={<Navigate to="404" replace />} />
+          <Route path="404" element={<p>NO MATCH</p>} />
+        </Routes>
+      </Box>
+    </ChakraProvider>
+  );
+};
